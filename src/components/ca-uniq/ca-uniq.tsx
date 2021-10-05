@@ -1,4 +1,4 @@
-import { Component, h, Host, State } from '@stencil/core';
+import { Component, Element, h, Host, State } from '@stencil/core';
 import stringSimilarity from 'string-similarity';
 import { ApisName, fetchApi } from '../../utils/services/fetchApi';
 import { csvToJson } from '../../utils/utils';
@@ -21,9 +21,9 @@ interface HolyGrail {
   tag: 'ca-uniq',
   styleUrl: 'ca-uniq.scss',
   assetsDirs: ['../../assets'],
-  shadow: true,
 })
 export class CaUniq {
+  @Element() element: HTMLElement;
   @State() uniqs: Uniq[] = [];
   @State() holyGrail: HolyGrail[] = [];
   @State() search: string = '';
@@ -75,15 +75,15 @@ export class CaUniq {
 
     this.holyGrail = [...this.holyGrail];
 
-    console.log(this.holyGrail);
-
     localStorage.setItem('holyGrail', JSON.stringify(this.holyGrail));
+
+    this.element.querySelectorAll('input')?.[0]?.focus();
+    this.element.querySelectorAll('input')?.[0]?.select();
   }
 
   percent = 0;
 
   filterList(list: Uniq[]): Uniq[] {
-    console.log(list);
     return list
       .filter(({ id, ['lvl req']: lvl }) => {
         if (!id || !lvl) {
@@ -127,7 +127,14 @@ export class CaUniq {
           HOLY GRAIL [{this.holyGrail.length}/{this.uniqs.length}] (🏆{Math.round((this.holyGrail.length / this.uniqs.length) * 10000) / 100}%)
         </div>
         <div class="actions">
-          <input list="list-uniq" value={this.search} onInput={event => this.handleChange(event)} placeholder="Item name"></input>
+          <input
+            list="list-uniq"
+            value={this.search}
+            onInput={event => {
+              this.handleChange(event);
+            }}
+            placeholder="Item name"
+          ></input>
           <div
             class={{
               on: this.searchHoly,
