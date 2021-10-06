@@ -1,5 +1,5 @@
 {
-  "name": "stencil-starter-project-name-loader",
+  "name": "charsi-loader",
   "typings": "./index.d.ts",
   "module": "./index.js",
   "main": "./index.cjs.js",

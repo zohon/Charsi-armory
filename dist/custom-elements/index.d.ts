@@ -1,4 +1,4 @@
-/* StencilStarterProjectName custom elements bundle */
+/* charsi custom elements bundle */
 
 import type { Components, JSX } from "../types/components";
 
