@@ -91,6 +91,7 @@ ca-uniq {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     grid-column-gap: 15px;
+    padding: 0 15px;
     grid-row-gap: 15px;
 
 /* width */
@@ -126,6 +127,11 @@ ca-uniq {
     text-align: center;
     position: relative;
     filter: grayscale(1);
+    background: #2c2c2c;
+    align-items: center;
+    box-shadow: inset 0px 0px 6px 6px #0000001c;
+
+    z-index: 100;
 
     &.grailed {
       border:1px solid #8c8875;
@@ -133,10 +139,12 @@ ca-uniq {
     }
 
     .img {
+      transition: all 0.3s ease-in-out;
       height: 100%;
       margin-bottom: 30px;
       display: flex;
       align-items: center;
+
       img {
         object-fit: contain;
       }
