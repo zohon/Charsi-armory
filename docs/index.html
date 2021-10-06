@@ -1,54 +1,11 @@
-<!DOCTYPE html>
-<html dir="ltr" lang="en">
+<html>
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
-    <title>Charsi armory</title>
-    <link rel="modulepreload" href="/build/p-b620b985.js" />
-    <script type="module" src="/build/p-b620b985.js" data-stencil data-resources-url="/build/" data-stencil-namespace="stencil-starter-project-name"></script>
-    <script nomodule="" src="/build/stencil-starter-project-name.js" data-stencil></script>
-    <style>
-      html,
-      body {
-        background: #222222;
-        height: 100%;
-        margin: 0;
-        width: 100%;
-      }
-      .menu {
-        /* height: 35px; */
-      }
-      .elements {
-        display: flex;
-        height: 100%;
-        margin: 0;
-        width: 100%;
-        /* height: calc(100% - 35px); */
-      }
-      ca-runes,
-      ca-uniq {
-        flex: 1;
-      }
-      @font-face {
-        font-family: 'exocet_light';
-        src: url('assets/exocet_light.ttf');
-      }
-      @font-face {
-        font-family: 'exocet_big';
-        src: url('assets/exocet_big.ttf');
-      }
-      @font-face {
-        font-family: 'formal';
-        src: url('assets/Formal_436_BT.ttf');
-      }
-    </style>
+    <script type="module">
+      import { defineCustomElements } from 'https://cdn.jsdelivr.net/npm/@ionic/core/loader/index.es2017.mjs';
+      defineCustomElements();
+    </script>
   </head>
   <body>
-    <div class="elements">
-      <!-- <ca-runes></ca-runes> -->
-      <ca-uniq></ca-uniq>
-    </div>
-    <!-- <ca-charm></ca-charm> -->
-    <!-- <ca-runeword></ca-runeword> -->
+    <ion-toggle></ion-toggle>
   </body>
 </html>
