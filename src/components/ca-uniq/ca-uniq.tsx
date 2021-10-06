@@ -70,15 +70,21 @@ export class CaUniq {
   async getUniqs() {
     fetchApi(ApisName.Uniq)?.then(data => {
       this.uniqs = csvToJson(data);
-      fetchApi(ApisName.Set)?.then(data => (this.uniqs = [...this.uniqs, ...csvToJson(data)]));
-      // .then(data => {
-      //   // data.map(d => {
-      //   //   //({
-      //   //   //   label: d.id.trim(),
-      //   //   //   src: `https://diablo2.io/styles/zulu/theme/images/items/${d.id.toLowerCase().replace(/'/g, '').replace(/ /g, '').trim()}_graphic.png`,
-      //   //   // })),
-      //   // });
-      // });
+      fetchApi(ApisName.Set)
+        ?.then(data => (this.uniqs = [...this.uniqs, ...csvToJson(data)]))
+        .then(data => {
+          console.log(
+            data.map(d => {
+              if (d.type) {
+                const target = d.type.toLowerCase().replace(/'/g, '').replace(/ /g, '').trim();
+                return {
+                  label: target,
+                  src: `https://diablo2.io/styles/zulu/theme/images/items/${target}_graphic.png`,
+                };
+              }
+            }),
+          );
+        });
     });
   }
 
@@ -234,8 +240,52 @@ export class CaUniq {
     );
   }
 
-  manageErrorImg(ev, type) {
-    const typetrim = type.toLowerCase().replace(/'/g, '').replace(/ /g, '').trim();
+  baseItem = [
+    {
+      base: 'doubleaxe',
+      other: ['doubleaxe', 'ettinaxe', 'twinaxe'],
+    },
+    {
+      base: 'militarypick',
+      other: ['warspike', 'crowbill', 'militarypick'],
+    },
+    {
+      base: 'waraxe',
+      other: ['naga', 'waraxe', 'berserkeraxe'],
+    },
+    {
+      base: 'largeaxe',
+      other: ['militaryaxe', 'largeaxe', 'feralaxe'],
+    },
+    {
+      base: 'broadaxe',
+      other: ['beardedaxe', 'broadaxe', 'silver-edgedaxe'],
+    },
+    {
+      base: 'greataxe',
+      other: ['gothicaxe', 'greataxe', 'championaxe'],
+    },
+    {
+      base: 'wand',
+      other: ['burntwand', 'polishedwand', 'wand'],
+    },
+    {
+      base: 'bonewand',
+      other: ['tombwand', 'lichwand', 'bonewand'],
+    },
+  ];
+
+  reduceType(target: string): string {
+    return target.toLowerCase().replace(/'/g, '').replace(/ /g, '').trim();
+  }
+
+  getBaseType(type: string): string {
+    const typetrim = this.reduceType(type);
+    return this.baseItem.find(({ other }) => other.includes(typetrim))?.base || typetrim;
+  }
+
+  manageErrorImg(ev: any, type: string) {
+    const typetrim = this.getBaseType(type);
     const typesrc = getAssetPath(`./assets/img/${typetrim}.png`);
     if (ev.target.src.includes(`/${typetrim}.png`)) {
       ev.target.remove();
@@ -244,7 +294,7 @@ export class CaUniq {
     }
   }
 
-  displayimg(id, type) {
+  displayimg(id: Uniq['id'], type: Uniq['type']) {
     const idTrim = id.toLowerCase().replace(/'/g, '').replace(/ /g, '').trim();
     return (
       <div class="img">

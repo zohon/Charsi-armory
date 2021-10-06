@@ -16,7 +16,6 @@ export function csvToJson(csv: string): any {
   // header columns so we store them
   // in headers array
   let headers = array[0].split(',');
-  console.log(headers);
 
   // Since headers are separated, we
   // need to traverse remaining n-1 rows.
@@ -26,7 +25,7 @@ export function csvToJson(csv: string): any {
     let str = array[i];
     const replaceComma = '###';
 
-    var r = str.replace(/"[^"]+"/g, function(v) {
+    var r = str.replace(/"[^"]+"/g, function (v) {
       return v.replace(/,/g, replaceComma);
     });
 
