@@ -1,0 +1,66 @@
+@charset "UTF-8";
+:host {
+  display: block;
+  color: #8c8875;
+  font-family: "formal";
+  border: 1px solid #8c8875;
+  padding: 0 15px;
+  position: relative;
+}
+:host .close {
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  height: 24px;
+  font-size: 24px;
+  width: 23px;
+  color: #cd0202;
+  border: 2px solid black;
+  display: flex;
+  background: #850707;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+:host .close:hover {
+  filter: brightness(1.75);
+}
+:host .close:before {
+  content: "X";
+  text-shadow: 1px 1px 1px black;
+}
+:host .header {
+  font-family: "exocet_big";
+  font-size: 24px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+}
+:host .rune {
+  display: flex;
+  height: 20px;
+  cursor: pointer;
+  transition: font-size 0.3s ease;
+  padding: 5px;
+  display: flex;
+}
+:host .rune:hover {
+  background-color: #8c8875;
+  color: black;
+}
+:host .rune:hover .name {
+  font-size: 18px;
+}
+:host .rune .name {
+  min-width: 250px;
+}
+:host .rune .value {
+  margin: 0 5px 0 0;
+  min-width: 50px;
+  position: relative;
+}
+:host .rune .value:not(:empty):after {
+  position: absolute;
+  right: 0;
+  content: "💰";
+}

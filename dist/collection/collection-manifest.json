@@ -1,0 +1,15 @@
+{
+  "entries": [
+    "./components/ca-charm/ca-charm.js",
+    "./components/ca-runes/ca-runes.js",
+    "./components/ca-runeword/ca-runeword.js",
+    "./components/ca-uniq/ca-uniq.js"
+  ],
+  "compiler": {
+    "name": "@stencil/core",
+    "version": "2.8.0",
+    "typescriptVersion": "4.2.3"
+  },
+  "collections": [],
+  "bundles": []
+}
