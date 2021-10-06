@@ -1,0 +1,1 @@
+import{r as l,h as a,H as s}from"./p-31265a07.js";const i=[{type:"small",suffix:[{label:"life",min:16,max:20},{label:"magic find",min:6,max:7},{label:"magic find",min:6,max:7}]}],m=class{constructor(a){l(this,a)}render(){return console.log(i),a(s,null,a("slot",null,"Charm"),a("div",null))}};m.style=":host{display:block}";export{m as ca_charm}
