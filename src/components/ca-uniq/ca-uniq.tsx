@@ -1,4 +1,4 @@
-import { Component, Element, h, Host, State } from '@stencil/core';
+import { Component, Element, getAssetPath, h, Host, State } from '@stencil/core';
 import stringSimilarity from 'string-similarity';
 import { ApisName, fetchApi } from '../../utils/services/fetchApi';
 import { csvToJson } from '../../utils/utils';
@@ -20,7 +20,7 @@ interface HolyGrail {
 @Component({
   tag: 'ca-uniq',
   styleUrl: 'ca-uniq.scss',
-  assetsDirs: ['../../assets'],
+  assetsDirs: ['assets'],
 })
 export class CaUniq {
   @Element() element: HTMLElement;
@@ -28,16 +28,57 @@ export class CaUniq {
   @State() holyGrail: HolyGrail[] = [];
   @State() search: string = '';
   @State() searchHoly: boolean = false;
+  @State() listening: boolean = false;
 
   componentWillLoad() {
     this.getHolyGrail();
     this.getUniqs();
+    this.manageVoice();
+  }
+
+  recognition: any;
+
+  manageVoice() {
+    /* La zone texte */
+
+    /* Initialise la reconnaissance vocale */
+    const SpeechRecognition = (window as any).speechRecognition || (window as any).webkitSpeechRecognition;
+    this.recognition = new SpeechRecognition();
+    this.recognition.continuous = true;
+    this.recognition.lang = 'en-EN';
+    this.recognition.onresult = event => {
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        this.manageCommand(event.results[i][0].transcript);
+      }
+    };
+  }
+
+  manageCommand(msg: string) {
+    console.log(msg);
+    if (msg.includes('search')) {
+      this.search = msg.replace('search', '').trim();
+      console.log(this.search);
+    }
+    if (msg.includes('select first')) {
+      const list = this.filterList(this.uniqs);
+      if (list?.[0]?.id) {
+        this.setHolyGrail(list[0].id);
+      }
+    }
   }
 
   async getUniqs() {
     fetchApi(ApisName.Uniq)?.then(data => {
       this.uniqs = csvToJson(data);
       fetchApi(ApisName.Set)?.then(data => (this.uniqs = [...this.uniqs, ...csvToJson(data)]));
+      // .then(data => {
+      //   // data.map(d => {
+      //   //   //({
+      //   //   //   label: d.id.trim(),
+      //   //   //   src: `https://diablo2.io/styles/zulu/theme/images/items/${d.id.toLowerCase().replace(/'/g, '').replace(/ /g, '').trim()}_graphic.png`,
+      //   //   // })),
+      //   // });
+      // });
     });
   }
 
@@ -119,6 +160,8 @@ export class CaUniq {
     return this.holyGrail.find(({ id }) => id === itemId);
   }
 
+  @State() listImg: any = [];
+
   render() {
     return (
       <Host>
@@ -144,24 +187,69 @@ export class CaUniq {
           >
             🏆
           </div>
+          <div
+            class={{
+              on: this.listening,
+              action: true,
+            }}
+            onClick={() => {
+              if (this.listening) {
+                this.recognition.stop();
+                this.listening = false;
+              } else {
+                this.recognition.start();
+                this.listening = true;
+              }
+            }}
+          >
+            🎤
+          </div>
         </div>
 
         <div class="list">
           {this.filterList(this.uniqs).map(({ id, value, ['lvl req']: lvl, type }) => {
             const holyGrailed = this.isHolyGrail(id);
-
             return (
-              <div key={id} class="uniq" onClick={() => this.setHolyGrail(id)}>
-                <div class="name">{id}</div>
-                <div class="lvl">{lvl}</div>
-                <div class="type">{type}</div>
+              <div
+                key={id}
+                class={{
+                  grailed: !!holyGrailed,
+                  uniq: true,
+                }}
+                onClick={() => this.setHolyGrail(id)}
+              >
+                {this.displayimg(id, type)}
+                <div class="infos">
+                  <div class="name">{id}</div>
+                  <div class="type">{type}</div>
+                  <div class="lvl">{lvl}</div>
+                </div>
                 <div class="value">{value}</div>
-                <div class="holyGrai">{holyGrailed ? (holyGrailed.ethereal ? '<Ethereal>' : '🏆 <Aquired>') : ''}</div>
+                <div class="holyGrail">{holyGrailed ? (holyGrailed.ethereal ? '🏆<Ethereal>' : '🏆') : ''}</div>
               </div>
             );
           })}
         </div>
       </Host>
+    );
+  }
+
+  manageErrorImg(ev, type) {
+    const typetrim = type.toLowerCase().replace(/'/g, '').replace(/ /g, '').trim();
+    const typesrc = getAssetPath(`./assets/img/${typetrim}.png`);
+    if (ev.target.src.includes(`/${typetrim}.png`)) {
+      ev.target.remove();
+    } else {
+      ev.target.src = typesrc;
+    }
+  }
+
+  displayimg(id, type) {
+    const idTrim = id.toLowerCase().replace(/'/g, '').replace(/ /g, '').trim();
+    return (
+      <div class="img">
+        <img onError={ev => this.manageErrorImg(ev, type)} src={getAssetPath(`./assets/img/${idTrim}.png`)} loading="lazy"></img>
+      </div>
     );
   }
 }
