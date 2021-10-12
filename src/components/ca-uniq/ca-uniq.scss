@@ -4,8 +4,8 @@ ca-uniq {
   font-family: 'formal';
   border: 1px solid #8c8875;
   padding: 0 1px;
-
   position: relative;
+  width: calc(100% - 4px);
 
   .close {
     position: absolute;
@@ -35,10 +35,17 @@ ca-uniq {
   .header {
     font-family: 'exocet_big';
     font-size: 24px;
-    height: 45px;
+    min-height: 40px;
     display: flex;
     align-items: center;
-    padding: 0 15px;
+    padding: 0 15px 5px;
+
+    div {
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+    }
   }
 
 
@@ -73,6 +80,7 @@ ca-uniq {
     font-family: 'exocet_big';
     font-size: 16px;
     padding : 5px 10px;
+    max-width: calc(70% - 11px);
     outline: none;
     width: auto;
 
@@ -90,11 +98,10 @@ ca-uniq {
   .list {
     grid-template-columns: repeat(8, minmax(150px, 1fr));
     height: calc(100% - 99px);
+    flex-wrap: wrap;
+    justify-content: space-around;
     overflow: auto;
-    display: grid;
-    grid-column-gap: 15px;
-    padding: 0 15px;
-    grid-row-gap: 15px;
+    display: flex;
 
 
     @media (max-width: 1280px) {
@@ -112,6 +119,10 @@ ca-uniq {
     @media (max-width: 500px) {
     grid-template-columns: repeat(3, minmax(120px, 1fr));
     }
+
+    @media (max-width: 400px) {
+      grid-template-columns: repeat(2, minmax(110px, 1fr));
+      }
 
     /* width */
     &::-webkit-scrollbar {
@@ -149,8 +160,43 @@ ca-uniq {
     background: #2c2c2c;
     align-items: center;
     box-shadow: inset 0px 0px 6px 6px #0000001c;
-
+    width: 170px;
+    margin: 5px;
     z-index: 100;
+
+
+
+
+    &.ethereal {
+
+      .name {
+          color:white;
+          text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #e60073, 0 0 30px #e60073, 0 0 40px #e60073, 0 0 50px #e60073, 0 0 60px #e60073;
+
+      }
+
+      img {
+        filter: drop-shadow(16px 16px 20px red) invert(75%);
+      }
+      .ethereal {
+        // animation: myOrbit 2s ease infinite;
+        // animation-direction: alternate;
+                filter: grayscale(0);
+      }
+    }
+
+    @keyframes myOrbit {
+      from { transform: rotate(0deg) translateX(0) rotate(0deg); }
+      to   { transform: rotate(0deg) translateX(100%) rotate(0deg); }
+  }
+
+    .ethereal {
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      filter: grayscale(1);
+      opacity: 0.8;
+    }
 
     &.grailed {
       border:1px solid #8c8875;
@@ -184,7 +230,6 @@ ca-uniq {
     .holyGrail {
       position: absolute;
       text-align: right;
-      width: 100%;
       top: 5px;
       right: 5px;
     }

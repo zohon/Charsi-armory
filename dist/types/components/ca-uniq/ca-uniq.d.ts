@@ -16,8 +16,10 @@ export declare class CaUniq {
   holyGrail: HolyGrail[];
   search: string;
   searchHoly: boolean;
+  searchEthereal: boolean;
   listening: boolean;
   componentWillLoad(): void;
+  STEPNBELEMENT: number;
   recognition: any;
   manageVoice(): void;
   manageCommand(msg: string): void;
@@ -25,11 +27,15 @@ export declare class CaUniq {
   handleChange(event: any): void;
   getHolyGrail(): void;
   setHolyGrail(itemId: Uniq['id'], ethereal?: boolean, exist?: boolean): void;
+  reFocus(): void;
   percent: number;
+  display: number;
   filterList(list: Uniq[]): Uniq[];
   manageId(id: Uniq['id']): Uniq['id'];
   isHolyGrail(itemId: Uniq['id']): HolyGrail;
   listImg: any;
+  getPercent(): any;
+  manageScroll(ev: any): void;
   render(): any;
   baseItem: {
     base: string;

@@ -3,8 +3,12 @@
   color : #8c8875;
   font-family: 'formal';
   border: 1px solid #8c8875;
-  padding: 0 15px;
   position: relative;
+  min-width : 400px;
+  padding: 0 0 0 15px;
+  display: flex;
+  flex-direction: column;
+
 
   .close {
     position: absolute;
@@ -40,6 +44,32 @@
   }
 
 
+  .list {
+    height: auto;
+    overflow: auto;
+
+   /* width */
+   &::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  /* Track */
+  &::-webkit-scrollbar-track {
+    background: #8c8875;
+  }
+
+  /* Handle */
+  &::-webkit-scrollbar-thumb {
+    background: #24150b;
+  }
+
+  /* Handle on hover */
+  &::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+
+  }
+
   .rune {
     display: flex;
     height: 20px;
@@ -57,10 +87,18 @@
 
     }
 
-
+    .nb {
+      font-family: 'exocet_big';
+      font-size: 18px;
+      color: white;
+      width: 40px;
+      text-align: right;
+      margin-right: 5px;
+    }
 
     .name {
-      min-width : 250px;
+      min-width : 50px;
+      user-select: none;
     }
     .value {
       margin: 0 5px 0 0;

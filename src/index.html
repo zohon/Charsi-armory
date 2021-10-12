@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
     <title>Charsi armory</title>
 
-    <script type="module" src="/build/stencil-starter-project-name.esm.js"></script>
-    <script nomodule src="/build/stencil-starter-project-name.js"></script>
+    <script type="module" src="/build/charsi.esm.js"></script>
+    <script nomodule src="/build/charsi.js"></script>
     <style>
       html,
       body {
@@ -25,9 +25,12 @@
         width: 100%;
         /* height: calc(100% - 35px); */
       }
-      ca-runes,
       ca-uniq {
         flex: 1;
+      }
+
+      .hide {
+        display: none;
       }
       @font-face {
         font-family: 'exocet_light';
@@ -41,13 +44,34 @@
         font-family: 'formal';
         src: url('assets/Formal_436_BT.ttf');
       }
+
+      .displays {
+        position: absolute;
+        right:5px;
+        top:5px;
+        cursor: pointer;
+        display: flex;
+      }
+      .display {
+        height: 35px;
+      }
+
     </style>
   </head>
   <body>
     <div class="elements">
-      <!-- <ca-runes></ca-runes> -->
+      <ca-bases hide=true></ca-bases>
+      <ca-runes hide=true></ca-runes>
+      <!-- <iframe src="https://d2runewizard.com/"></iframe> -->
       <ca-uniq></ca-uniq>
-    </div>
+
+      <div class="displays">
+      <img class="display" onclick="document.querySelector('ca-runes')?.setAttribute('hide', !document.querySelector('ca-runes').hide);" src="data:image/png;base64,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"></img>
+      <img class="display" onclick="document.querySelector('ca-bases')?.setAttribute('hide', !document.querySelector('ca-bases').hide);" src="http://classic.battle.net/images/battle/diablo2exp/images/items/armor/quilted.gif"></img>
+      <!-- <img class="display" onclick="document.querySelector('iframe').style.display = document.querySelector('iframe').style.display === 'none' ? 'flex' : 'none'" src="https://cdn-icons-png.flaticon.com/512/2318/2318227.png"></img> -->
+
+      </div>
+     </div>
     <!-- <ca-charm></ca-charm> -->
     <!-- <ca-runeword></ca-runeword> -->
   </body>

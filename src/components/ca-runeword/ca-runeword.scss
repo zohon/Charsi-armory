@@ -1,0 +1,34 @@
+:host {
+  display: block;
+  color:white;
+  background : black;
+  font-family: "formal";
+
+
+  a {
+    color: #8c8875;
+  }
+
+  .armor {
+    display: flex;
+    position:relative;
+    white-space: nowrap;
+    color:white;
+    margin : 0;
+    padding : 5px;
+    background : black;
+
+    img {
+      height: 45px;
+      margin-right : 5px;
+    }
+  }
+
+  .runes {
+    display: flex;
+    .rune {
+      border : 1px solid white;
+      padding : 3px;
+    }
+  }
+}

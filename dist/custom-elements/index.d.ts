@@ -2,6 +2,12 @@
 
 import type { Components, JSX } from "../types/components";
 
+interface CaBases extends Components.CaBases, HTMLElement {}
+export const CaBases: {
+  prototype: CaBases;
+  new (): CaBases;
+};
+
 interface CaCharm extends Components.CaCharm, HTMLElement {}
 export const CaCharm: {
   prototype: CaCharm;

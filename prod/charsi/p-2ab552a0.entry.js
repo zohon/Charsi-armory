@@ -1,1 +1,0 @@
-import{r,h as s,H as o}from"./p-1a329e43.js";const t=class{constructor(s){r(this,s)}render(){return s(o,null,s("slot",null))}};t.style=":host{display:block}";export{t as ca_runeword}

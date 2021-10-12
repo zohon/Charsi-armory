@@ -6,9 +6,13 @@
  */
 import { HTMLStencilElement, JSXBase } from "./stencil-public-runtime";
 export namespace Components {
+    interface CaBases {
+        "hide": boolean;
+    }
     interface CaCharm {
     }
     interface CaRunes {
+        "hide": boolean;
     }
     interface CaRuneword {
     }
@@ -16,6 +20,12 @@ export namespace Components {
     }
 }
 declare global {
+    interface HTMLCaBasesElement extends Components.CaBases, HTMLStencilElement {
+    }
+    var HTMLCaBasesElement: {
+        prototype: HTMLCaBasesElement;
+        new (): HTMLCaBasesElement;
+    };
     interface HTMLCaCharmElement extends Components.CaCharm, HTMLStencilElement {
     }
     var HTMLCaCharmElement: {
@@ -41,6 +51,7 @@ declare global {
         new (): HTMLCaUniqElement;
     };
     interface HTMLElementTagNameMap {
+        "ca-bases": HTMLCaBasesElement;
         "ca-charm": HTMLCaCharmElement;
         "ca-runes": HTMLCaRunesElement;
         "ca-runeword": HTMLCaRunewordElement;
@@ -48,15 +59,20 @@ declare global {
     }
 }
 declare namespace LocalJSX {
+    interface CaBases {
+        "hide"?: boolean;
+    }
     interface CaCharm {
     }
     interface CaRunes {
+        "hide"?: boolean;
     }
     interface CaRuneword {
     }
     interface CaUniq {
     }
     interface IntrinsicElements {
+        "ca-bases": CaBases;
         "ca-charm": CaCharm;
         "ca-runes": CaRunes;
         "ca-runeword": CaRuneword;
@@ -67,6 +83,7 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "ca-bases": LocalJSX.CaBases & JSXBase.HTMLAttributes<HTMLCaBasesElement>;
             "ca-charm": LocalJSX.CaCharm & JSXBase.HTMLAttributes<HTMLCaCharmElement>;
             "ca-runes": LocalJSX.CaRunes & JSXBase.HTMLAttributes<HTMLCaRunesElement>;
             "ca-runeword": LocalJSX.CaRuneword & JSXBase.HTMLAttributes<HTMLCaRunewordElement>;

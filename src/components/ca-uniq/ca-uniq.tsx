@@ -27,7 +27,10 @@ export class CaUniq {
   @State() uniqs: Uniq[] = [];
   @State() holyGrail: HolyGrail[] = [];
   @State() search: string = '';
+
   @State() searchHoly: boolean = false;
+  @State() searchEthereal: boolean = false;
+
   @State() listening: boolean = false;
 
   componentWillLoad() {
@@ -36,6 +39,7 @@ export class CaUniq {
     this.manageVoice();
   }
 
+  STEPNBELEMENT = 40;
   recognition: any;
 
   manageVoice() {
@@ -68,28 +72,29 @@ export class CaUniq {
   }
 
   async getUniqs() {
+    let uniqs = [];
     fetchApi(ApisName.Uniq)?.then(data => {
-      this.uniqs = csvToJson(data);
-      fetchApi(ApisName.Set)
-        ?.then(data => (this.uniqs = [...this.uniqs, ...csvToJson(data)]))
-        .then(data => {
-          console.log(
-            data.map(d => {
-              if (d.type) {
-                const target = d.type.toLowerCase().replace(/'/g, '').replace(/ /g, '').trim();
-                return {
-                  label: target,
-                  src: `https://diablo2.io/styles/zulu/theme/images/items/${target}_graphic.png`,
-                };
-              }
-            }),
-          );
-        });
+      uniqs = csvToJson(data);
+      fetchApi(ApisName.Set)?.then(data => (this.uniqs = [...uniqs, ...csvToJson(data)]));
+      // .then(data => {
+      //   console.log(
+      //     data.map(d => {
+      //       if (d.type) {
+      //         const target = d.type.toLowerCase().replace(/'/g, '').replace(/ /g, '').trim();
+      //         return {
+      //           label: target,
+      //           src: `https://diablo2.io/styles/zulu/theme/images/items/${target}_graphic.png`,
+      //         };
+      //       }
+      //     }),
+      //   );
+      // });
     });
   }
 
   handleChange(event) {
     this.search = event.target.value;
+    this.display = this.STEPNBELEMENT;
   }
 
   getHolyGrail() {
@@ -106,29 +111,33 @@ export class CaUniq {
   setHolyGrail(itemId: Uniq['id'], ethereal = false, exist = true) {
     let holyItem = this.holyGrail.find(({ id }) => itemId === id);
     if (!holyItem) {
-      this.holyGrail.push({
-        id: itemId,
-        ethereal,
-        exist,
-      });
+      this.holyGrail = [
+        ...this.holyGrail,
+        {
+          id: itemId,
+          ethereal,
+          exist,
+        },
+      ];
     } else if (holyItem.ethereal !== ethereal) {
-      holyItem = {
-        ...holyItem,
-        ethereal,
-      };
+      this.holyGrail = this.holyGrail.map(hg => {
+        if (hg.id !== itemId) return hg;
+        return { ...hg, ethereal };
+      });
     } else {
       this.holyGrail = this.holyGrail.filter(({ id }) => id !== itemId);
     }
 
-    this.holyGrail = [...this.holyGrail];
-
     localStorage.setItem('holyGrail', JSON.stringify(this.holyGrail));
+  }
 
+  reFocus() {
     this.element.querySelectorAll('input')?.[0]?.focus();
     this.element.querySelectorAll('input')?.[0]?.select();
   }
 
   percent = 0;
+  @State() display = this.STEPNBELEMENT;
 
   filterList(list: Uniq[]): Uniq[] {
     return list
@@ -138,6 +147,10 @@ export class CaUniq {
         }
 
         if (this.searchHoly && !this.isHolyGrail(id)) {
+          return false;
+        }
+
+        if (this.searchEthereal && !this.isHolyGrail(id)?.ethereal) {
           return false;
         }
 
@@ -155,7 +168,8 @@ export class CaUniq {
         const aid = this.manageId(a.id);
         const bid = this.manageId(b.id);
         return stringSimilarity.compareTwoStrings(bid, this.search) - stringSimilarity.compareTwoStrings(aid, this.search);
-      });
+      })
+      .slice(0, this.display);
   }
 
   manageId(id: Uniq['id']): Uniq['id'] {
@@ -168,12 +182,32 @@ export class CaUniq {
 
   @State() listImg: any = [];
 
+  getPercent() {
+    if (!this.uniqs?.length) return;
+    return (
+      <div>
+        <span>(🏆{Math.round((this.holyGrail.length / this.uniqs.length) * 10000) / 100}%)</span>
+        <span>(👻{Math.round((this.holyGrail.filter(({ ethereal }) => ethereal).length / this.uniqs.length) * 10000) / 100}%)</span>
+      </div>
+    );
+  }
+
+  manageScroll(ev) {
+    const element = ev.target;
+    if (element.scrollHeight - element.scrollTop === element.clientHeight) {
+      this.display += this.STEPNBELEMENT;
+    }
+  }
+
   render() {
     return (
       <Host>
-        <div class="close"></div>
+        {/* <div class="close"></div> */}
         <div class="header">
-          HOLY GRAIL [{this.holyGrail.length}/{this.uniqs.length}] (🏆{Math.round((this.holyGrail.length / this.uniqs.length) * 10000) / 100}%)
+          <div>
+            HOLY GRAIL [{this.holyGrail.length}/{this.uniqs.length}]
+          </div>
+          {this.getPercent()}
         </div>
         <div class="actions">
           <input
@@ -189,9 +223,24 @@ export class CaUniq {
               on: this.searchHoly,
               action: true,
             }}
-            onClick={() => (this.searchHoly = !this.searchHoly)}
+            onClick={() => {
+              this.display = this.STEPNBELEMENT;
+              this.searchHoly = !this.searchHoly;
+            }}
           >
-            🏆
+            🏆 {this.holyGrail.length}
+          </div>
+          <div
+            class={{
+              on: this.searchEthereal,
+              action: true,
+            }}
+            onClick={() => {
+              this.display = this.STEPNBELEMENT;
+              this.searchEthereal = !this.searchEthereal;
+            }}
+          >
+            👻 {this.holyGrail.filter(({ ethereal }) => ethereal).length}
           </div>
           <div
             class={{
@@ -212,7 +261,7 @@ export class CaUniq {
           </div>
         </div>
 
-        <div class="list">
+        <div class="list" onScroll={ev => this.manageScroll(ev)}>
           {this.filterList(this.uniqs).map(({ id, value, ['lvl req']: lvl, type }) => {
             const holyGrailed = this.isHolyGrail(id);
             return (
@@ -221,6 +270,7 @@ export class CaUniq {
                 class={{
                   grailed: !!holyGrailed,
                   uniq: true,
+                  ethereal: holyGrailed && holyGrailed.ethereal,
                 }}
                 onClick={() => this.setHolyGrail(id)}
               >
@@ -231,7 +281,17 @@ export class CaUniq {
                   <div class="lvl">{lvl}</div>
                 </div>
                 <div class="value">{value}</div>
-                <div class="holyGrail">{holyGrailed ? (holyGrailed.ethereal ? '🏆<Ethereal>' : '🏆') : ''}</div>
+                <div
+                  class="ethereal"
+                  title="Ethereal"
+                  onClick={ev => {
+                    ev.stopPropagation();
+                    this.setHolyGrail(id, true);
+                  }}
+                >
+                  👻
+                </div>
+                <div class="holyGrail">{holyGrailed ? '🏆' : ''}</div>
               </div>
             );
           })}
