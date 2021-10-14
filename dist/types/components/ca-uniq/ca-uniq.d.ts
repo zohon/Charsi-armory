@@ -4,6 +4,7 @@ interface Uniq {
   lvl: string;
   ['lvl req']: string;
   type: string;
+  set?: string;
 }
 interface HolyGrail {
   id: Uniq['id'];
@@ -37,6 +38,7 @@ export declare class CaUniq {
   getPercent(): any;
   manageScroll(ev: any): void;
   render(): any;
+  manageStats(uniq: Uniq): any;
   baseItem: {
     base: string;
     other: string[];

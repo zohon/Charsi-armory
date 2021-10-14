@@ -9,6 +9,7 @@ interface Uniq {
   lvl: string;
   ['lvl req']: string;
   type: string;
+  set?: string;
 }
 
 interface HolyGrail {
@@ -262,7 +263,8 @@ export class CaUniq {
         </div>
 
         <div class="list" onScroll={ev => this.manageScroll(ev)}>
-          {this.filterList(this.uniqs).map(({ id, value, ['lvl req']: lvl, type }) => {
+          {this.filterList(this.uniqs).map(uniq => {
+            const { id, value, ['lvl req']: lvl, type } = uniq;
             const holyGrailed = this.isHolyGrail(id);
             return (
               <div
@@ -275,11 +277,33 @@ export class CaUniq {
                 onClick={() => this.setHolyGrail(id)}
               >
                 {this.displayimg(id, type)}
+
                 <div class="infos">
-                  <div class="name">{id}</div>
+                  <div
+                    class={{
+                      name: true,
+                      set: !!uniq.set,
+                    }}
+                  >
+                    {id}
+                  </div>
+
                   <div class="type">{type}</div>
                   <div class="lvl">{lvl}</div>
                 </div>
+
+                <div class="stats">
+                  <div
+                    class={{
+                      name: true,
+                      set: !!uniq.set,
+                    }}
+                  >
+                    {id}
+                  </div>
+                  {this.manageStats(uniq)}
+                </div>
+
                 <div class="value">{value}</div>
                 <div
                   class="ethereal"
@@ -298,6 +322,38 @@ export class CaUniq {
         </div>
       </Host>
     );
+  }
+
+  manageStats(uniq: Uniq): any {
+    let statIndex = 1;
+    const listData = [];
+    while (uniq && uniq[`prop${statIndex}`] !== undefined) {
+      listData.push({
+        label: uniq[`prop${statIndex}`],
+        min: uniq[`min${statIndex}`],
+        max: uniq[`max${statIndex}`],
+      });
+      statIndex++;
+    }
+    return listData.map(({ min, max, label }) => {
+      if (min === max) {
+        return (
+          <div class="attr">
+            <div class="val">{max}</div>
+            <div class="label">{label}</div>
+          </div>
+        );
+      }
+
+      return (
+        <div class="attr variable">
+          <div class="val">
+            {min}-{max}
+          </div>
+          <div class="label">{label}</div>
+        </div>
+      );
+    });
   }
 
   baseItem = [
@@ -333,7 +389,166 @@ export class CaUniq {
       base: 'bonewand',
       other: ['tombwand', 'lichwand', 'bonewand'],
     },
+    {
+      base: 'giantaxe',
+      other: ['giantaxe', 'ancientaxe', 'gloriousaxe'],
+    },
+    {
+      base: 'yewwand',
+      other: ['yewwand', 'ghostwand', 'petrifiedwand'],
+    },
+    {
+      base: 'grandscepter',
+      other: ['grandscepter', 'holywatersprinkler', 'seraphrod'],
+    },
+    {
+      base: 'warscepter',
+      other: ['warscepter', 'caduceus', 'divinescepter'],
+    },
+    {
+      base: 'spikedclub',
+      other: ['spikedclub', 'recipe:magicshieldofspikes', 'barbedclub'],
+    },
+    {
+      base: 'mace',
+      other: ['mace', 'flangedmace', 'reinforcedmace'],
+    },
+    {
+      base: 'morningstar',
+      other: ['morningstar', 'devilstar', 'jaggedstar'],
+    },
+    {
+      base: 'flail',
+      other: ['flail', 'knout', 'scourge'],
+    },
+    {
+      base: 'warhammer',
+      other: ['warhammer', 'battlehammer', 'legendarymallet'],
+    },
+    {
+      base: 'maul',
+      other: ['maul', 'ogremaul', 'warclub'],
+    },
+    {
+      base: 'greatmaul',
+      other: ['greatmaul', 'marteldefer', 'thundermaul'],
+    },
+    {
+      base: 'shortsword',
+      other: ['shortsword', 'falcata', 'gladius'],
+    },
+    {
+      base: 'scimitar',
+      other: ['scimitar', 'ataghan', 'cutlass'],
+    },
+    {
+      base: 'crystalsword',
+      other: ['crystalsword', 'dimensionalblade', 'phaseblade'],
+    },
+    {
+      base: 'warsword',
+      other: ['warsword', 'ancientsword', 'mythicalsword'],
+    },
+    {
+      base: 'two-handedsword',
+      other: ['two-handedsword', 'espadon', 'legendsword'],
+    },
+    {
+      base: 'claymore',
+      other: ['claymore', 'dacianfalx', 'highlandblade'],
+    },
+    {
+      base: 'giantsword',
+      other: ['giantsword', 'balrogblade', 'tusksword'],
+    },
+    {
+      base: 'bastardsword',
+      other: ['bastardsword', 'championsword', 'gothicsword'],
+    },
+    {
+      base: 'dagger',
+      other: ['dagger', 'boneknife', 'poignard'],
+    },
+    {
+      base: 'dirk',
+      other: ['dirk', 'mithrilpoint', 'rondel'],
+    },
+    {
+      base: 'kriss',
+      other: ['kriss', 'cinquedeas', 'fangedknife'],
+    },
+    {
+      base: 'warspear',
+      other: ['warspear', 'hyperionspear', 'spear'],
+    },
+    {
+      base: 'fuscina',
+      other: ['fuscina', 'stygianpike', 'trident'],
+    },
+    {
+      base: 'brandistock',
+      other: ['brandistock', 'mancatcher', 'warfork'],
+    },
+    {
+      base: 'spear',
+      other: ['spear', 'hyperionspear', 'warspear'],
+    },
+    {
+      base: 'trident',
+      other: ['trident', 'fuscina', 'stygianpike'],
+    },
+    {
+      base: 'spetum',
+      other: ['spetum', 'ghostspear', 'yari'],
+    },
+    {
+      base: 'pike',
+      other: ['pike', 'lance', 'warpike'],
+    },
+    {
+      base: 'fuscina',
+      other: ['fuscina', 'stygianpike', 'trident'],
+    },
+    {
+      base: 'yari',
+      other: ['yari', 'ghostspear', 'spetum'],
+    },
+    {
+      base: 'saber',
+      other: ['saber', 'elegantblade', 'shamshir'],
+    },
+    {
+      base: 'scepter',
+      other: ['scepter', 'mightyscepter', 'runescepter'],
+    },
+    {
+      base: 'gnarledstaff',
+      other: ['gnarledstaff', 'cedarstaff', 'elderstaff'],
+    },
+    {
+      base: 'shortbow',
+      other: ['shortbow', 'edgebow', 'spiderbow'],
+    },
+    {
+      base: 'compositebow',
+      other: ['compositebow', 'doublebow', 'greatbow'],
+    },
   ];
+
+  /*
+let itemBlock = document.querySelector('.element-item');
+let main = itemBlock.querySelector('h3').innerText.toLowerCase().replace(/ /g, "");
+let others = [main];
+itemBlock.querySelectorAll('.z-lh-usedin').forEach(d => {
+if(!d.innerText.toLowerCase().replace(/ /g, "").includes('recipe')){
+others.push(d.innerText.toLowerCase().replace(/ /g, ""))
+}}
+)
+console.log({
+      base: main,
+      other: others.slice(0,3)
+    });
+    */
 
   reduceType(target: string): string {
     return target.toLowerCase().replace(/'/g, '').replace(/ /g, '').trim();
